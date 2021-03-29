@@ -1,0 +1,80 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+
+
+    id 'com.google.gms.google-services'
+
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
+
+    defaultConfig {
+        applicationId "com.example.remotelist"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+        useIR = true
+    }
+    buildFeatures {
+        compose true
+    }
+    composeOptions {
+        kotlinCompilerVersion '1.4.31'
+    }
+}
+
+dependencies {
+
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+
+    //<editor-fold desc="KTX">
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.0'
+    implementation 'com.google.android.material:material:1.3.0'
+    testImplementation 'junit:junit:4.13.2'
+    //</editor-fold>
+    //<editor-fold desc="Jetpack Compose">
+    implementation "androidx.compose.material:material:$compose_version"
+    implementation "androidx.compose.ui:ui:$compose_version"
+    implementation "androidx.compose.ui:ui-tooling:$compose_version"
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
+    //</editor-fold>
+    //<editor-fold desc="Jetpack Compose Extensions">
+    implementation 'androidx.activity:activity-compose:1.3.0-alpha04'
+    implementation 'androidx.navigation:navigation-compose:1.0.0-alpha09'
+    //</editor-fold>
+    //<editor-fold desc="Firebase">
+    implementation platform('com.google.firebase:firebase-bom:26.7.0')
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.2.1"
+    //</editor-fold>
+    //<editor-fold desc="Firebase Firestore">
+    implementation 'com.google.firebase:firebase-firestore-ktx'
+    //</editor-fold>
+    //<editor-fold desc="Firebase Authentication">
+    implementation 'com.google.firebase:firebase-auth-ktx'
+    //</editor-fold>
+    //<editor-fold desc="Hilt">
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    //</editor-fold>
+}

@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">Remote List</string>
+
+    <string name="toast_no_name">Введите название</string>
+    <string name="toast_no_count">Неверное количество</string>
+    <string name="toast_no_user">Войдите или зарегистрируйтесь.</string>
+    <string name="toast_user_not_found">Пользователь не найден. Внутренняя ошибка приложения.</string>
+    <string name="toast_item_not_found">Покупка не найдена. Внутренняя ошибка приложения.</string>
+    <string name="shopping_list">Список покупок</string>
+    <string name="navigation_button">Открыть навигационную шторку.</string>
+    <string name="no_list">Список покупок не найден</string>
+    <string name="add_item">Добавить</string>
+    <string name="toast_unknown_error">Неизвестная ошибка</string>
+    <string name="toast_cannot_update_user">Невозможно зарегистрироваться. Внутренняя ошибка приложения</string>
+    <string name="toast_shopping_list_not_found">Список не найден. Внутренняя ошибка приложения</string>
+    <string name="toast_no_friends">Друзья отсутствуют.</string>
+    <string name="users">Пользователи</string>
+    <string name="choose_friends">Выберите друга, чтобы посмотреть список.</string>
+    <string name="no_friends">Друзья отсутствуют.</string>
+</resources>
