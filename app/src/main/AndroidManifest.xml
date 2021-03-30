@@ -3,13 +3,12 @@
     package="com.example.remotelist">
 
     <application
-        android:allowBackup="true"
-        android:name=".RemoteListApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.RemoteList">
+        android:theme="@style/Theme.RemoteList"
+        android:allowBackup="true">
         <activity
             android:name=".MainActivity"
             android:exported="true"
