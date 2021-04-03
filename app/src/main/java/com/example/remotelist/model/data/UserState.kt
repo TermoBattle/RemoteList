@@ -5,13 +5,14 @@ import com.example.remotelist.model.SHOPPING_LIST
 import com.google.firebase.firestore.DocumentReference
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 typealias ShoppingList = List<ShopItem>
 typealias Friends = List<String>
 
-class UserState private constructor(
+data class UserState (
     private val _shoppingList: MutableStateFlow<ShoppingList>,
     private val _friends: MutableStateFlow<Friends>,
     private val _friendsCount: MutableStateFlow<Int>
@@ -40,4 +41,5 @@ class UserState private constructor(
     val friends = _friends.asStateFlow()
     val friendsCount = _friendsCount.asStateFlow()
 
+    fun withShoppingList(shoppingList:StateFlow<ShoppingList>):UserState = copy(_shoppingList = _shoppingList)
 }

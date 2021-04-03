@@ -19,8 +19,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListViewModel @Inject constructor(private val model: Model) :
-    ViewModel() {
+class ListViewModel @Inject constructor(private val model: Model) : ViewModel() {
     val maxCount: MutableState<Int?> = mutableStateOf(null)
     val name = mutableStateOf("")
     val description = mutableStateOf("")
@@ -35,15 +34,14 @@ class ListViewModel @Inject constructor(private val model: Model) :
     val friends: State<List<String>> = _friends
 
     private val _friendsCount = mutableStateOf(0)
-    val friendsCount:State<Int> = _friendsCount
+    val friendsCount: State<Int> = _friendsCount
 
     init {
         viewModelScope.launch {
             model.userState.collect { userState: UserState ->
                 userState.run {
-                    launch{ shoppingList.collect { _shoppingList.value = it } }
-                    launch{ friends.collect { _friends.value = it } }
-                    launch{ friendsCount.collect { _friendsCount.value = it } }
+                    launch { friends.collect { _friends.value = it } }
+                    launch { friendsCount.collect { _friendsCount.value = it } }
                 }
             }
         }
@@ -63,7 +61,7 @@ class ListViewModel @Inject constructor(private val model: Model) :
 
         viewModelScope.launch {
             try {
-                model.create(
+                model.createItem(
                     maxCount = maxCount.value,
                     name = name.value,
                     description = description.value
@@ -78,7 +76,7 @@ class ListViewModel @Inject constructor(private val model: Model) :
 
     fun increase(context: Context, shopItem: ShopItem): Unit = viewModelScope.launch {
         try {
-            model.update(shopItem)
+            model.updateItem(shopItem)
         } catch (e: FirebaseException) {
             context.toastFirebaseException(e)
         } catch (e: Exception) {
@@ -89,7 +87,7 @@ class ListViewModel @Inject constructor(private val model: Model) :
     fun delete(context: Context, shopItem: ShopItem) {
         viewModelScope.launch {
             try {
-                model.delete(shopItem)
+                model.deleteItem(shopItem)
             } catch (e: FirebaseException) {
                 context.toastFirebaseException(e)
             } catch (e: Exception) {

@@ -1,6 +1,5 @@
 package com.example.remotelist.model.repository
 
-import com.example.remotelist.model.LOGIN
 import com.example.remotelist.model.USERS
 import com.example.remotelist.model.USER_ID
 import com.example.remotelist.model.data.UserState
@@ -22,8 +21,8 @@ import javax.inject.Inject
 
 class UserRepository @Inject constructor() {
 
-    private val _currentUserLogin = MutableStateFlow("")
-    val currentUserLogin: StateFlow<String> = _currentUserLogin.asStateFlow()
+    private val _currentUserState = MutableStateFlow(UserState())
+    val currentUserState: StateFlow<UserState> = _currentUserState.asStateFlow()
 
     init {
         GlobalScope.launch {
@@ -31,35 +30,11 @@ class UserRepository @Inject constructor() {
                 .auth
                 .addAuthStateListener { it: FirebaseAuth ->
                     it.currentUser?.let{
-                        launch {
-                            _currentUserLogin.emit(
-                                value = getLogin(id = it.uid)
-                            )
-                        }
-                    } ?: throw NoUserException()
+                        launch { _currentUserState.emit(getUserState(it.uid)) }
+                    }
                 }
         }
     }
-
-    private suspend fun getLogin(id:String):String = Firebase
-        .firestore
-        .collection(USERS)
-        .whereEqualTo(USER_ID, id)
-        .getSnapshot()
-        ?.run{
-            first().get(LOGIN, String::class.java)
-        } ?: throw UserNotFoundException()
-
-    suspend fun UserState(login: String) =
-        UserState(userDocumentReference = getUserDocument(login = login))
-
-    suspend fun getUserDocument(login: String): DocumentReference = Firebase.firestore
-        .collection(USERS)
-        .whereEqualTo(LOGIN, login)
-        .getSnapshot()
-        ?.first()
-        ?.reference
-        ?: throw UserNotFoundException()
 
     private suspend fun getUserDocumentById(userId: String): DocumentReference = Firebase.firestore
         .collection(USERS)
@@ -69,12 +44,33 @@ class UserRepository @Inject constructor() {
         ?.reference
         ?: throw UserNotFoundException()
 
-    suspend fun getCurrentUserDocument(): DocumentReference =
-        getUserDocumentById(userId = getCurrentUserId())
-
     private fun getCurrentUserId(): String = Firebase
         .auth
         .currentUser
         ?.uid ?: throw NoUserException()
 
+    suspend fun getCurrentUserDocument(): DocumentReference =
+        getUserDocumentById(userId = getCurrentUserId())
+
+    suspend fun getUserState(uid:String) = UserState(userDocumentReference = getUserDocument(uid))
+
+    suspend fun getUserDocument(uid: String): DocumentReference = Firebase.firestore
+        .collection(USERS)
+        .whereEqualTo(USER_ID, uid)
+        .getSnapshot()
+        ?.first()
+        ?.reference
+        ?: throw UserNotFoundException()
+
+    fun createUser(email:String, password:String){
+        Firebase.auth.createUserWithEmailAndPassword(email, password)
+    }
+
+    fun signInUser(email: String, password: String){
+        Firebase.auth.signInWithEmailAndPassword(email, password)
+    }
+
+    fun deleteUser(){
+        Firebase.auth.currentUser?.delete() ?: throw NoUserException()
+    }
 }

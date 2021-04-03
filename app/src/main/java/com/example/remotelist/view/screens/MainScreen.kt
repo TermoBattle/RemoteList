@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.List
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -21,13 +22,23 @@ import com.example.remotelist.R
 import com.example.remotelist.view.navigation.AccountScreen
 import com.example.remotelist.view.navigation.ListScreen
 import com.example.remotelist.view.navigation.Screen
+import com.example.remotelist.viewmodel.AccountViewModel
+import com.example.remotelist.viewmodel.ListViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun MainScreen() {
+fun MainScreen(listViewModel: ListViewModel, accountViewModel: AccountViewModel) {
     var currentScreen: Screen by remember { mutableStateOf(ListScreen) }
     val navController = rememberNavController()
     val coroutineScope = rememberCoroutineScope()
+
+    fun Screen.navigateHere(){
+        currentScreen = this
+        navController.navigate(route)
+    }
+    fun DrawerState.openDrawer(){
+        coroutineScope.launch { open() }
+    }
 
     val drawerState: DrawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     ModalDrawer(
@@ -41,10 +52,13 @@ fun MainScreen() {
                     icon = Icons.Default.List,
                     text = stringResource(R.string.shopping_list),
                     isSelected = currentScreen.route == ListScreen.route,
-                    onClick = {
-                        currentScreen = ListScreen
-                        navController.navigate(ListScreen.route)
-                    }
+                    onClick = ListScreen::navigateHere
+                )
+                DrawerButton(
+                    icon = Icons.Default.AccountBox,
+                    text = stringResource(R.string.account_screen),
+                    isSelected = currentScreen.route == AccountScreen.route,
+                    onClick = AccountScreen::navigateHere
                 )
 
             }
@@ -54,14 +68,16 @@ fun MainScreen() {
 
             composable(route = ListScreen.route) {
                 ListScreen(
-                    onOpenDrawer = {
-                        coroutineScope.launch { drawerState.open() }
-                    }
+                    listViewModel = listViewModel,
+                    onOpenDrawer = drawerState::openDrawer
                 )
             }
 
             composable(route = AccountScreen.route) {
-                AccountScreen(modifier = Modifier.padding(16.dp))
+                AccountScreen(
+                    accountViewModel = accountViewModel,
+                    onOpenDrawer = drawerState::openDrawer
+                )
             }
 
         }
@@ -93,6 +109,7 @@ private fun DrawerButton(
         color = backgroundColor,
         shape = MaterialTheme.shapes.small
     ) {
+
         TextButton(onClick = onClick, modifier = Modifier.fillMaxWidth()) {
             Row(
                 horizontalArrangement = Arrangement.Start,

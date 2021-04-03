@@ -26,7 +26,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.remotelist.R
 import com.example.remotelist.model.data.ShopItem
 import com.example.remotelist.utils.ExtendedFloatingActionButton
@@ -35,12 +34,8 @@ import com.example.remotelist.utils.IconButton
 import com.example.remotelist.viewmodel.ListViewModel
 
 
-@JvmOverloads
 @Composable
-fun ListScreen(
-    listViewModel: ListViewModel = viewModel(),
-    onOpenDrawer: () -> Unit
-) {
+fun ListScreen(listViewModel: ListViewModel, onOpenDrawer: () -> Unit) {
     var newShoppingItemDialog: Boolean by listViewModel.newShoppingItemDialog
     var chooseUserDialog: Boolean by listViewModel.chooseUserDialog
 
@@ -101,6 +96,7 @@ fun ChooseShoppingListDialog(
     listViewModel: ListViewModel,
     onChooseUser: (login: String) -> Unit
 ) = Dialog(onDismissRequest = onClose) {
+
     val friendsList by listViewModel.friends
 
     Column {
@@ -110,7 +106,10 @@ fun ChooseShoppingListDialog(
             LazyColumn(verticalArrangement = Arrangement.Center) {
                 items(friendsList) { friendLogin ->
                     Text(
-                        modifier = Modifier.clickable(onClick = { onChooseUser(friendLogin) }),
+                        modifier = Modifier.clickable {
+                            onChooseUser(friendLogin)
+                            onClose()
+                        },
                         text = friendLogin
                     )
                 }
@@ -154,7 +153,11 @@ private fun NewShoppingItemDialog(onClose: () -> Unit, listViewModel: ListViewMo
 
         Column(modifier = Modifier.background(color = MaterialTheme.colors.onPrimary, shape = MaterialTheme.shapes.medium).padding(16.dp)) {
             Text(text = "Новая покупка")
-            OutlinedTextField(value = name, onValueChange = { name = it }, label = { Text(text = "Название") })
+            OutlinedTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = { Text(text = "Название") }
+            )
             OutlinedTextField(
                 value = if (maxCount == null || maxCount?.let { it <= 0 } == true)
                     ""

@@ -32,6 +32,29 @@ fun IconButton(
 )
 
 @Composable
+fun IconButton(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    imageVector: ImageVector,
+    contentDescription: String?,
+    text: String,
+) = androidx.compose.material.IconButton(
+    onClick = onClick,
+    modifier = modifier,
+    enabled = enabled,
+    interactionSource = interactionSource,
+    content = {
+        Icon(
+            imageVector = imageVector,
+            contentDescription = contentDescription
+        )
+        Text(text = text)
+    }
+)
+
+@Composable
 inline fun ExtendedFloatingActionButton(
     imageVector: ImageVector,
     text: String,

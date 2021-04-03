@@ -17,4 +17,19 @@
     <string name="users">Пользователи</string>
     <string name="choose_friends">Выберите друга, чтобы посмотреть список.</string>
     <string name="no_friends">Друзья отсутствуют.</string>
+    <string name="account_screen">Аккаунт</string>
+    <string name="user_logged">Вы зарегистрированы</string>
+    <string name="user_not_logged">Вы не зарегистрированы</string>
+    <string name="register">Зарегистрироваться</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_in_with_email_and_password">Войти с помощью почты и пароля</string>
+    <string name="register_with_email_and_password">Зарегистрироваться с помощью почты и пароля</string>
+    <string name="sign_out">Выйти</string>
+    <string name="email">Email</string>
+    <string name="password">Пароль</string>
+    <string name="toast_no_email">Введите email</string>
+    <string name="toast_no_password">Введите пароль</string>
+    <string name="no_login">Введите логин</string>
+    <string name="login">Логин</string>
+    <string name="toast_no_login">Введите логин</string>
 </resources>

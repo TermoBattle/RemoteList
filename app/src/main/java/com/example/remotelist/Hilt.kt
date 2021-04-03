@@ -1,4 +1,7 @@
 package com.example.remotelist
 
-//@HiltAndroidApp
-//class RemoteListApplication : Application()
+import android.app.Application
+import dagger.hilt.android.HiltAndroidApp
+
+@HiltAndroidApp
+class RemoteListApplication : Application()
