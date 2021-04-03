@@ -70,7 +70,6 @@ dependencies {
     //-- Firebase KTX --/////////////////////////////////////////
     implementation 'com.google.firebase:firebase-firestore-ktx'
     implementation 'com.google.firebase:firebase-auth-ktx'
-    implementation 'com.firebaseui:firebase-ui-auth:6.4.0'
 
     //-- Hilt --/////////////////////////////////////////////////
     implementation "com.google.dagger:hilt-android:$hilt_version"

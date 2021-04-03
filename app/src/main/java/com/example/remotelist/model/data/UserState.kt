@@ -42,4 +42,6 @@ data class UserState (
     val friendsCount = _friendsCount.asStateFlow()
 
     fun withShoppingList(shoppingList:StateFlow<ShoppingList>):UserState = copy(_shoppingList = _shoppingList)
+
+    fun isEmpty() = _shoppingList.value == emptyList<ShopItem>() && _friends.value == emptyList<String>() && _friendsCount.value == 0
 }

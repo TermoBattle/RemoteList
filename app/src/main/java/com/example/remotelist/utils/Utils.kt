@@ -14,4 +14,6 @@ inline fun State<Int?>.validate(onValid: (Int) -> Unit = {}, onInvalid: () -> Un
 else
     onValid(value!!)
 
+fun <E> List<E>.with(element: E): List<E> = toMutableList().apply { add(element) }
+
 fun <T> T.toUnit() = Unit

@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
@@ -66,11 +67,12 @@ class UserRepository @Inject constructor() {
         Firebase.auth.createUserWithEmailAndPassword(email, password)
     }
 
-    fun signInUser(email: String, password: String){
-        Firebase.auth.signInWithEmailAndPassword(email, password)
+    suspend fun signInUser(email: String, password: String){
+        Firebase.auth.signInWithEmailAndPassword(email, password).await()
     }
 
-    fun deleteUser(){
+    suspend fun deleteUser(){
+        getCurrentUserDocument().delete()
         Firebase.auth.currentUser?.delete() ?: throw NoUserException()
     }
 }

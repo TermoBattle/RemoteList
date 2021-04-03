@@ -1,16 +1,13 @@
 package com.example.remotelist.utils
 
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 
-@Composable
+/*@Composable
 fun IconButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -38,7 +35,7 @@ fun IconButton(
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     imageVector: ImageVector,
-    contentDescription: String?,
+    contentDescription: String? = null,
     text: String,
 ) = androidx.compose.material.IconButton(
     onClick = onClick,
@@ -46,13 +43,15 @@ fun IconButton(
     enabled = enabled,
     interactionSource = interactionSource,
     content = {
-        Icon(
-            imageVector = imageVector,
-            contentDescription = contentDescription
-        )
-        Text(text = text)
+        Row{
+            Icon(
+                imageVector = imageVector,
+                contentDescription = contentDescription
+            )
+            Text(text = text)
+        }
     }
-)
+)*/
 
 @Composable
 inline fun ExtendedFloatingActionButton(

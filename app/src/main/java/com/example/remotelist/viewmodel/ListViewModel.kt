@@ -1,6 +1,7 @@
 package com.example.remotelist.viewmodel
 
 import android.content.Context
+import androidx.annotation.StringRes
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ListViewModel @Inject constructor(private val model: Model) : ViewModel() {
+class ListViewModel @Inject constructor(private val model: Model, private val context: Context) : ViewModel() {
     val maxCount: MutableState<Int?> = mutableStateOf(null)
     val name = mutableStateOf("")
     val description = mutableStateOf("")
@@ -47,7 +48,11 @@ class ListViewModel @Inject constructor(private val model: Model) : ViewModel() 
         }
     }
 
-    fun create(context: Context) {
+    private inline fun toast(@StringRes message:Int) = context.toast(message)
+
+    private inline fun toastFirebaseException(e: FirebaseException) = context.toastFirebaseException(e)
+
+    fun create() {
         name.validate {
             context.toast(R.string.toast_no_name)
             return@validate
@@ -67,31 +72,31 @@ class ListViewModel @Inject constructor(private val model: Model) : ViewModel() 
                     description = description.value
                 )
             } catch (e: FirebaseException) {
-                context.toastFirebaseException(e)
+                toastFirebaseException(e)
             } catch (otherException: Exception) {
-                context.toast(R.string.toast_unknown_error)
+                toast(R.string.toast_unknown_error)
             }
         }
     }
 
-    fun increase(context: Context, shopItem: ShopItem): Unit = viewModelScope.launch {
+    fun increase(shopItem: ShopItem): Unit = viewModelScope.launch {
         try {
             model.updateItem(shopItem)
         } catch (e: FirebaseException) {
-            context.toastFirebaseException(e)
+            toastFirebaseException(e)
         } catch (e: Exception) {
-            context.toast(R.string.toast_unknown_error)
+            toast(R.string.toast_unknown_error)
         }
     }.toUnit()
 
-    fun delete(context: Context, shopItem: ShopItem) {
+    fun delete(shopItem: ShopItem) {
         viewModelScope.launch {
             try {
                 model.deleteItem(shopItem)
             } catch (e: FirebaseException) {
-                context.toastFirebaseException(e)
+                toastFirebaseException(e)
             } catch (e: Exception) {
-                context.toast(R.string.toast_unknown_error)
+                toast(R.string.toast_unknown_error)
             }
         }
     }

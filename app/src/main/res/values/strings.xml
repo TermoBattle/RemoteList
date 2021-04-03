@@ -32,4 +32,7 @@
     <string name="no_login">Введите логин</string>
     <string name="login">Логин</string>
     <string name="toast_no_login">Введите логин</string>
+    <string name="add_friend">Добавить друга</string>
+    <string name="friend_login">Логин друга\\</string>
+    <string name="user_already_registered">Вы уже зарегистрированы</string>
 </resources>

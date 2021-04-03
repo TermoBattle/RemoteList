@@ -6,6 +6,7 @@ import com.example.remotelist.model.repository.UserRepository
 import com.example.remotelist.utils.firebase.DocumentNotFoundException
 import com.example.remotelist.utils.firebase.NoUserException
 import com.example.remotelist.utils.firebase.getSnapshot
+import com.example.remotelist.utils.with
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
@@ -25,14 +26,15 @@ private val users: CollectionReference
 class Model @Inject constructor(private val userRepo: UserRepository) {
     val chosenUserLogin: MutableStateFlow<String> = MutableStateFlow("")
 
-    private var _userState: MutableStateFlow<UserState> = MutableStateFlow(UserState())
-    val userState = _userState.asStateFlow()
+    private val _userState: MutableStateFlow<UserState> = MutableStateFlow(UserState())
+    var userState = _userState.asStateFlow()
 
     init {
         GlobalScope.launch {
             chosenUserLogin.collect { login ->
-                if(login.isBlank())
-                    _userState = userRepo.currentUserState as MutableStateFlow<UserState>
+                if (login.isBlank()) {
+                    userState = userRepo.currentUserState
+                }
                 else
                     _userState.emit(userRepo.getUserState(login))
             }
@@ -78,34 +80,46 @@ class Model @Inject constructor(private val userRepo: UserRepository) {
             ?: throw DocumentNotFoundException()
     }
 
-    fun register(login:String, email:String, password:String){
+    fun register(login: String, email: String, password: String) {
 
         userRepo.createUser(email, password)
 
         val userData = hashMapOf(
-            "login" to login,
-            "friends" to emptyArray<String>(),
-            "userId" to Firebase.auth.currentUser!!.uid
+            LOGIN to login,
+            FRIENDS to emptyList<String>(),
+            USER_ID to (Firebase.auth.currentUser?.uid ?: throw NoUserException())
         )
 
-        users.document().set(userData)
+        users.document().let {
+            it.set(userData)
+            it.collection(SHOPPING_LIST)
+        }
     }
 
-     suspend fun signIn(login: String, email: String, password: String) {
+    suspend fun signIn(login: String, email: String, password: String) {
         userRepo.signInUser(email, password)
         chosenUserLogin.emit(login)
     }
 
-    fun signOut() = userRepo.deleteUser()
+    suspend fun signOut() = userRepo.deleteUser()
+
+    suspend fun addFriend(login: String) = userRepo.getCurrentUserDocument().run {
+        val friendsList: List<String> =
+            getSnapshot()[LOGIN, Array<String>::class.java]!!.asList()
+        set(
+            hashMapOf(
+                FRIENDS to friendsList.with(login)
+            )
+        )
+
+        Unit
+    }
 
 }
 
 private suspend fun findUser(login: String): DocumentReference = users
-    .whereEqualTo(LOGIN, login)
-    .getSnapshot()
-    ?.let {
-        it.first().reference
-    } ?: throw NoUserException()
+.whereEqualTo(LOGIN, login)
+.getSnapshot()?.first()?.reference ?: throw NoUserException()
 
 private suspend fun CollectionReference.findDocument(name: String): DocumentReference? = this
     .whereEqualTo(NAME, name)

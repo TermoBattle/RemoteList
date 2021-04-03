@@ -3,12 +3,9 @@ package com.example.remotelist.view.screens
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -30,7 +27,6 @@ import com.example.remotelist.R
 import com.example.remotelist.model.data.ShopItem
 import com.example.remotelist.utils.ExtendedFloatingActionButton
 import com.example.remotelist.utils.FilterN
-import com.example.remotelist.utils.IconButton
 import com.example.remotelist.viewmodel.ListViewModel
 
 
@@ -40,27 +36,33 @@ fun ListScreen(listViewModel: ListViewModel, onOpenDrawer: () -> Unit) {
     var chooseUserDialog: Boolean by listViewModel.chooseUserDialog
 
     val friendsCount by listViewModel.friendsCount
+
     //Экран с названием и списком
     Scaffold(
         modifier = Modifier
-            .padding(16.dp)
             .animateContentSize(),
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(
+                    /*IconButton(
                         onClick = onOpenDrawer,
                         imageVector = Icons.Default.Menu,
                         contentDescription = null
-                    )
+                    )*/
+                    IconButton(onClick = onOpenDrawer) {
+                        Icon(imageVector = Icons.Default.Menu, contentDescription = null)
+                    }
                 },
                 title = { Text(text = stringResource(R.string.shopping_list)) },
                 actions = {
-                    if (friendsCount > 0) IconButton(
+                    if (friendsCount > 0) /*IconButton(
                         onClick = { chooseUserDialog = true },
                         imageVector = Icons.Default.FilterN(friendsCount),
                         contentDescription = null
-                    )
+                    )*/
+                        IconButton(onClick = { chooseUserDialog = true }) {
+                            Icon(imageVector = Icons.Default.FilterN(friendsCount), contentDescription = null)
+                        }
                 }
             )
         },
@@ -91,7 +93,7 @@ fun ListScreen(listViewModel: ListViewModel, onOpenDrawer: () -> Unit) {
 }
 
 @Composable
-fun ChooseShoppingListDialog(
+private fun ChooseShoppingListDialog(
     onClose: () -> Unit,
     listViewModel: ListViewModel,
     onChooseUser: (login: String) -> Unit
@@ -99,7 +101,14 @@ fun ChooseShoppingListDialog(
 
     val friendsList by listViewModel.friends
 
-    Column {
+    Column(
+        modifier = Modifier
+            .background(
+                shape = MaterialTheme.shapes.medium,
+                color = MaterialTheme.colors.onPrimary
+            )
+            .padding(16.dp)
+    ) {
         Text(text = stringResource(R.string.choose_friends))
         Text(text = stringResource(R.string.users))
         if (friendsList.isNotEmpty())
@@ -135,8 +144,8 @@ private fun ShoppingList(modifier: Modifier = Modifier, listViewModel: ListViewM
             items(items = shoppingList) { shopItem ->
                 ShopItemComposable(
                     shopItem = shopItem,
-                    deleteShopItem = { listViewModel.delete(context, it) },
-                    increase = { listViewModel.increase(context, it) }
+                    deleteShopItem = { listViewModel.delete(it) },
+                    increase = { listViewModel.increase(it) }
                 )
             }
         }
@@ -151,7 +160,14 @@ private fun NewShoppingItemDialog(onClose: () -> Unit, listViewModel: ListViewMo
         var name by listViewModel.name
         var description by listViewModel.description
 
-        Column(modifier = Modifier.background(color = MaterialTheme.colors.onPrimary, shape = MaterialTheme.shapes.medium).padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .background(
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colors.onPrimary
+                )
+                .padding(16.dp)
+        ) {
             Text(text = "Новая покупка")
             OutlinedTextField(
                 value = name,
@@ -165,10 +181,7 @@ private fun NewShoppingItemDialog(onClose: () -> Unit, listViewModel: ListViewMo
                     maxCount.toString(),
                 onValueChange = { text: String ->
                     maxCount = text.toIntOrNull()?.let {
-                        if (it <= 0)
-                            null
-                        else
-                            it
+                        if (it <= 0) null else it
                     }
                 },
                 label = { Text(text = "Количество") },
@@ -184,7 +197,7 @@ private fun NewShoppingItemDialog(onClose: () -> Unit, listViewModel: ListViewMo
 
             OutlinedButton(
                 onClick = {
-                    listViewModel.create(context)
+                    listViewModel.create()
                     onClose()
                 },
                 content = {
@@ -200,19 +213,22 @@ private fun NewShoppingItemDialog(onClose: () -> Unit, listViewModel: ListViewMo
     }
 
 @Composable
-private fun ShopItemComposable(shopItem: ShopItem, deleteShopItem: (ShopItem) -> Unit, increase: (ShopItem) -> Unit) = Row {
+private fun ShopItemComposable(
+    shopItem: ShopItem,
+    deleteShopItem: (ShopItem) -> Unit,
+    increase: (ShopItem) -> Unit
+) = Row {
     shopItem.apply {
+
         Text(text = "${shopCounter.count}/${shopCounter.maxCount}")
+
         Divider(modifier = Modifier.padding(16.dp))
-        Row {
+
+        Column {
             Text(text = name)
-            Row(
-                modifier = Modifier.scrollable(
-                    orientation = Orientation.Horizontal,
-                    state = rememberScrollState()
-                )
-            ) { Text(text = description) }
+            Text(text = description)
         }
+
     }
 
     IconButton(onClick = { increase(shopItem) }) {
