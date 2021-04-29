@@ -4,22 +4,52 @@ import android.content.Context
 import com.example.remotelist.R
 import com.example.remotelist.utils.toast
 
-sealed class FirebaseException(message: String = "") : Exception(message)
-class NoUserException(message: String = "") : FirebaseException(message)
-class UserNotFoundException(message: String = "") : FirebaseException(message)
-class DocumentNotFoundException(message: String = "") : FirebaseException(message)
-class CannotUpdateUser(message: String = "") : FirebaseException(message)
-class NoShoppingList(message: String = "") : FirebaseException(message)
-class NoFriendsListException(message: String = ""):FirebaseException(message)
+sealed class FirebaseException(message: String = "") : Exception(message){
+    abstract val toastMessage:Int
+}
 
+class NoUserException(message: String = "") : FirebaseException(message) {
+    override val toastMessage
+        get() = R.string.toast_no_user
+}
 
-fun Context.toastFirebaseException(firebaseException: FirebaseException) = toast(
-    when (firebaseException) {
-        is NoUserException -> R.string.toast_no_user
-        is UserNotFoundException -> R.string.toast_user_not_found
-        is DocumentNotFoundException -> R.string.toast_item_not_found
-        is CannotUpdateUser -> R.string.toast_cannot_update_user
-        is NoShoppingList -> R.string.toast_shopping_list_not_found
-        is NoFriendsListException -> R.string.toast_no_friends
-    }
-)
+class UserNotFoundException(message: String = "") : FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.toast_user_not_found
+}
+
+class DocumentNotFoundException(message: String = "") : FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.toast_document_not_found
+}
+
+class RegisterFailedException(message: String = ""): FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.register_failed
+}
+
+class ShoppingListNotFoundException(message: String = ""): FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.toast_collection_not_found
+}
+
+class LoginNotFoundException(message:String = ""): FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.toast_login_not_found
+}
+class FriendsNotFoundException(message: String = ""): FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.toast_friends_not_found
+}
+
+class UserIdNotFoundException(message: String = ""):FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.toast_user_id_not_found
+}
+
+class UserDocumentEmptyException(message: String = ""):FirebaseException(message) {
+    override val toastMessage: Int
+        get() = R.string.toast_user_empty
+}
+
+fun Context.toast(firebaseException: FirebaseException) = toast(firebaseException.toastMessage)

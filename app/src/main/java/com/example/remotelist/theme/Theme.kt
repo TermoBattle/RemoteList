@@ -1,4 +1,4 @@
-package com.example.remotelist.view.theme
+package com.example.remotelist.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

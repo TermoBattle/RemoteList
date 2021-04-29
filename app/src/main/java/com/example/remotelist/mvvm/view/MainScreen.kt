@@ -1,4 +1,4 @@
-package com.example.remotelist.view.screens
+package com.example.remotelist.mvvm.view
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -19,11 +19,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
 import com.example.remotelist.R
-import com.example.remotelist.view.navigation.AccountScreen
-import com.example.remotelist.view.navigation.ListScreen
-import com.example.remotelist.view.navigation.Screen
-import com.example.remotelist.viewmodel.AccountViewModel
-import com.example.remotelist.viewmodel.ListViewModel
+import com.example.remotelist.mvvm.viewmodel.AccountViewModel
+import com.example.remotelist.mvvm.viewmodel.ListViewModel
+import com.example.remotelist.navigation.AccountScreen
+import com.example.remotelist.navigation.ListScreen
+import com.example.remotelist.navigation.Screen
 import kotlinx.coroutines.launch
 
 @Composable
@@ -46,19 +46,20 @@ fun MainScreen(listViewModel: ListViewModel, accountViewModel: AccountViewModel)
         drawerContent = {
             Column(modifier = Modifier.fillMaxSize()) {
 
-                Spacer(Modifier.height(24.dp))
+                Spacer(Modifier.height(16.dp))
 
-                DrawerButton(
-                    icon = Icons.Default.List,
-                    text = stringResource(R.string.shopping_list),
-                    isSelected = currentScreen.route == ListScreen.route,
-                    onClick = ListScreen::navigateHere
-                )
+
                 DrawerButton(
                     icon = Icons.Default.AccountBox,
                     text = stringResource(R.string.account_screen),
                     isSelected = currentScreen.route == AccountScreen.route,
                     onClick = AccountScreen::navigateHere
+                )
+                DrawerButton(
+                    icon = Icons.Default.List,
+                    text = stringResource(R.string.shopping_list),
+                    isSelected = currentScreen.route == ListScreen.route,
+                    onClick = ListScreen::navigateHere
                 )
 
             }
@@ -66,16 +67,16 @@ fun MainScreen(listViewModel: ListViewModel, accountViewModel: AccountViewModel)
     ) {
         NavHost(navController = navController, startDestination = ListScreen.route) {
 
-            composable(route = ListScreen.route) {
-                ListScreen(
-                    listViewModel = listViewModel,
+            composable(route = AccountScreen.route) {
+                AccountScreen(
+                    accountViewModel = accountViewModel,
                     onOpenDrawer = drawerState::openDrawer
                 )
             }
 
-            composable(route = AccountScreen.route) {
-                AccountScreen(
-                    accountViewModel = accountViewModel,
+            composable(route = ListScreen.route) {
+                ListScreen(
+                    listViewModel = listViewModel,
                     onOpenDrawer = drawerState::openDrawer
                 )
             }

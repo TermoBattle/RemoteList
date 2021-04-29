@@ -1,4 +1,4 @@
-package com.example.remotelist.view.theme
+package com.example.remotelist.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

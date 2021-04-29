@@ -5,10 +5,10 @@
     <string name="toast_no_count">Неверное количество</string>
     <string name="toast_no_user">Войдите или зарегистрируйтесь.</string>
     <string name="toast_user_not_found">Пользователь не найден. Внутренняя ошибка приложения.</string>
-    <string name="toast_item_not_found">Покупка не найдена. Внутренняя ошибка приложения.</string>
+    <string name="toast_document_not_found">Покупка не найдена. Внутренняя ошибка приложения.</string>
     <string name="shopping_list">Список покупок</string>
     <string name="navigation_button">Открыть навигационную шторку.</string>
-    <string name="no_list">Список покупок не найден</string>
+    <string name="no_list">Список покупок пуст</string>
     <string name="add_item">Добавить</string>
     <string name="toast_unknown_error">Неизвестная ошибка</string>
     <string name="toast_cannot_update_user">Невозможно зарегистрироваться. Внутренняя ошибка приложения</string>
@@ -35,4 +35,18 @@
     <string name="add_friend">Добавить друга</string>
     <string name="friend_login">Логин друга\\</string>
     <string name="user_already_registered">Вы уже зарегистрированы</string>
+    <string name="register_failed">Регистрация не удалась. Внутренняя ошибка приложения.</string>
+    <string name="user_already_exist">Пользователь уже существует.</string>
+    <string name="invalid_password">Неверный пароль</string>
+    <string name="toast_collection_not_found">Список не найден</string>
+    <string name="refresh">Обновить</string>
+    <string name="toast_login_not_found">Логин не найден</string>
+    <string name="toast_friends_not_found">Друзья не найдены</string>
+    <string name="toast_user_id_not_found">ID пользователя не найден</string>
+    <string name="toast_user_empty">Пользователь найден, но данных нет. Внутренняя ошибка приложения</string>
+    <string name="new_shopping_item">Новая покупка</string>
+    <string name="name">Название</string>
+    <string name="count">Количество</string>
+    <string name="description">Описание</string>
+    <string name="create">Создать</string>
 </resources>
